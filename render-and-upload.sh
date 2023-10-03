@@ -3,7 +3,9 @@
 function main() {
     echo "Selected $1 to upload, searching for commit with upload data"
 
-    canvas_submit_to="$(get_canvas_info HEAD)"
+    cd "$(dirname "$1")" || exit
+
+    canvas_submit_to="$(get_canvas_info)"
 
     if [ "$canvas_submit_to" != "" ]; 
     then 
@@ -29,10 +31,7 @@ function main() {
 }
 
 function get_canvas_info() {
-    git show -s --format='%b%n' "$(git rev-parse "$1")" |
-    grep -i '^submit-to: ' |
-    head -n1 |
-    sed 's/^submit-to: //i'
+    git log --format='%(trailers:key=Submit-To,valueonly,separator=%x2C)' -n1
 }
 
 HTML_RENDERER_FILENAME="$(mktemp)"

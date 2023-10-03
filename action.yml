@@ -13,15 +13,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: |
-          echo "Rendering and uploading for $(pwd)/README.md"
-          canvas_preview_url="$(render-and-upload.sh "$(pwd)/README.md")"
-          gh api \
-            --method POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" \
-            -f body="Rendered and submitted to Canvas! $canvas_preview_url" \ 
+    - run: render-and-upload.sh README.md
       shell: bash
       env:
           CANVAS_TOKEN: ${{ inputs.canvas_token }}
