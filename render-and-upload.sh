@@ -38,7 +38,7 @@ function get_canvas_info() {
     git show -s --format=%b "$(git rev-parse "$1")" |
     while IFS= read -r line; do
         echo "debug: Reading line '$line'" >&2
-        if [[ "$line" = Submit-To* ]]; then 
+        if [[ "$line" = 'Submit-To: '* ]]; then 
             value="$(echo $line | sed 's/submit-to: //i')"
 
             echo "canvas_submit_to='$value'; canvas_submittable=1;"
