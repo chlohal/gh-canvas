@@ -1,0 +1,33 @@
+name: 'Submit to Canvas'
+description: 'Reads commit trailers and, when invoked, renders a PDF from a README to submit to Canvas'
+inputs:
+  github_token:
+    description: 'GITHUB_TOKEN'
+    default: '${{ github.token }}'
+  canvas_base_url:
+    description: 'Base URL of your Canvas installation, without any trailing slashes'
+    required: true
+  canvas_token:
+    description: 'canvas token'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - run: |
+          gh_canvas_folder=$(mktemp -d)
+          git clone https://github.com/chlohal/gh-canvas --depth=1 "$gh_canvas_folder/gh-canvas"
+          canvas_preview_url=$("$gh_canvas_folder/gh-canvas/render-and-upload.sh" "$(pwd)/README.md")
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "/repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" \
+            -f body="Rendered and submitted to Canvas! $canvas_preview_url" \ 
+      shell: bash
+      env:
+          CANVAS_TOKEN: ${{ inputs.canvas_token }}
+          CANVAS_BASE_URL: ${{ inputs.canvas_base_url }}
+          GITHUB_TOKEN: ${{ inputs.github_token }}

@@ -8,7 +8,6 @@ main() {
     base_md="$(basename "$1")"
 
     cd "$dir_md" || exit
-    cd "$base_md" || exit
 
     eval "$(get_canvas_info HEAD)"
 
@@ -20,7 +19,7 @@ main() {
         filename="$(pwd)/$assignment_name-$commit_hash.pdf"
         html_filename="$(mktemp --suffix=".html")"
 
-        render_html ./README.md > "$html_filename"
+        render_html "$base_md" > "$html_filename"
         chrome --headless --disable-gpu --print-to-pdf="./$filename" "$html_filename"
 
         submit_to_canvas "$canvas_submit_to" "$filename"
