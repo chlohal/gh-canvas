@@ -13,7 +13,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: render-and-upload.sh
+    - run: curl 'https://raw.githubusercontent.com/chlohal/gh-canvas/master/render-and-upload.sh' | bash
       shell: bash
       env:
           CANVAS_TOKEN: ${{ inputs.canvas_token }}
