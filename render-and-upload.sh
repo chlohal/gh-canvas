@@ -31,18 +31,19 @@ main() {
 
         echo "Uploading PDF to Canvas"
         submit_to_canvas "$canvas_submit_to" "$filename"
+    else 
+        echo "No canvas info found"
     fi
 }
 
 function get_canvas_info() {
-    git show -s --format=%b "$(git rev-parse "$1")" |
+    git show -s --format='%b%n' "$(git rev-parse "$1")" |
+    grep -i '^submit-to: ' |
     while IFS= read -r line; do
         echo "debug: Reading line '$line'" >&2
-        if [[ "$line" = 'Submit-To: '* ]]; then 
             value="$(echo $line | sed 's/submit-to: //i')"
 
             echo "canvas_submit_to='$value'; canvas_submittable=1;"
-        fi
     done
 }
 
