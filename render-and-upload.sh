@@ -1,6 +1,6 @@
 #! /bin/bash
 
-main() {
+function main() {
     echo "Selected $1 to upload, searching for commit with upload data"
 
     dir_md="$(dirname "$1")"
