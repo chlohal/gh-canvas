@@ -13,9 +13,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
     - run: |
           gh_canvas_folder=$(mktemp -d)
           git clone https://github.com/chlohal/gh-canvas --depth=1 "$gh_canvas_folder/gh-canvas"
