@@ -39,13 +39,9 @@ function get_canvas_info() {
     while IFS= read -r line; do
         echo "debug: Reading line $line" >&2
         if echo "$line" | grep -qi "^submit-to: "; then 
-            value=$(echo $line | sed 's/submit-to: //i')
+            value="$(echo $line | sed 's/submit-to: //i')"
 
-            if [[ "$value" == previous* ]]; then 
-                get_canvas_info "$1~"
-            else 
-                echo "canvas_submit_to='$value'; canvas_submittable=1;"
-            fi
+            echo "canvas_submit_to='$value'; canvas_submittable=1;"
         fi
     done
 }
