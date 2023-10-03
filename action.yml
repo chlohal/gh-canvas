@@ -13,6 +13,7 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - uses: browser-actions/setup-chrome@v1
     - run: |
         curl 'https://raw.githubusercontent.com/chlohal/gh-canvas/master/render-and-upload.sh' | bash
       shell: bash
