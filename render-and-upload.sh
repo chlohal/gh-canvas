@@ -3,11 +3,6 @@
 function main() {
     echo "Selected $1 to upload, searching for commit with upload data"
 
-    dir_md="$(dirname "$1")"
-    base_md="$(basename "$1")"
-
-    cd "$dir_md" || exit
-
     canvas_submit_to="$(get_canvas_info HEAD)"
 
     if [ "$canvas_submit_to" != "" ]; 
@@ -21,7 +16,7 @@ function main() {
         html_filename="$(mktemp --suffix=".html")"
 
         echo "Rendering Markdown to HTML"
-        render_html "$base_md" > "$html_filename"
+        render_html "$1" > "$html_filename"
 
         echo "Rendering HTML to PDF"
         chrome --headless --disable-gpu --print-to-pdf="./$filename" "$html_filename"
