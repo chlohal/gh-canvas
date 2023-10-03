@@ -1,9 +1,6 @@
 #! /bin/bash
 
 main() {
-    canvas_submit_to=""
-    canvas_submittable=0
-
     echo "Selected $1 to upload, searching for commit with upload data"
 
     dir_md="$(dirname "$1")"
@@ -11,9 +8,9 @@ main() {
 
     cd "$dir_md" || exit
 
-    eval "$(get_canvas_info HEAD)"
+    canvas_submit_to="$(get_canvas_info HEAD)"
 
-    if [ "$canvas_submittable" != 0 ]; 
+    if [ "$canvas_submit_to" != "" ]; 
     then 
         echo "Submitting to $canvas_submit_to"
 
@@ -39,12 +36,8 @@ main() {
 function get_canvas_info() {
     git show -s --format='%b%n' "$(git rev-parse "$1")" |
     grep -i '^submit-to: ' |
-    while IFS= read -r line; do
-        echo "debug: Reading line '$line'" >&2
-            value="$(echo $line | sed 's/submit-to: //i')"
-
-            echo "canvas_submit_to='$value'; canvas_submittable=1;"
-    done
+    head -n1 |
+    sed 's/^submit-to: //i'
 }
 
 HTML_RENDERER_FILENAME="$(mktemp)"
