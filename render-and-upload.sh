@@ -4,6 +4,8 @@ main() {
     canvas_submit_to=""
     canvas_submittable=0
 
+    echo "Selected $1 to upload, searching for commit with upload data"
+
     dir_md="$(dirname "$1")"
     base_md="$(basename "$1")"
 
