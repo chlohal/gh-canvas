@@ -22,7 +22,15 @@ function main() {
         chrome --headless --disable-gpu --print-to-pdf="./$filename" "$html_filename"
 
         echo "Uploading PDF to Canvas"
-        submit_to_canvas "$canvas_submit_to" "$filename"
+
+        canvas_preview_url="$(submit_to_canvas "$canvas_submit_to" "$filename")"
+
+        gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" \
+            -f body="Rendered and submitted to Canvas! $canvas_preview_url"
     else 
         echo "No canvas info found"
     fi
