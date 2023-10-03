@@ -1,11 +1,9 @@
 #! /bin/bash
 
 function main() {
-    echo "Selected $1 to upload, searching for commit with upload data"
-
-    cd "$(dirname "$1")" || exit
-
     canvas_submit_to="$(get_canvas_info)"
+
+    
 
     if [ "$canvas_submit_to" != "" ]; 
     then 
@@ -18,7 +16,7 @@ function main() {
         html_filename="$(mktemp --suffix=".html")"
 
         echo "Rendering Markdown to HTML"
-        render_html "$1" > "$html_filename"
+        render_html "README.md" > "$html_filename"
 
         echo "Rendering HTML to PDF"
         chrome --headless --disable-gpu --print-to-pdf="./$filename" "$html_filename"

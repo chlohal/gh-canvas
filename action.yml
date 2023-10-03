@@ -13,7 +13,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: render-and-upload.sh README.md
+    - run: render-and-upload.sh
       shell: bash
       env:
           CANVAS_TOKEN: ${{ inputs.canvas_token }}
