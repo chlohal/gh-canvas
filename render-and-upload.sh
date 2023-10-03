@@ -13,15 +13,21 @@ main() {
 
     if [ "$canvas_submittable" != 0 ]; 
     then 
+        echo "Submitting to $canvas_submit_to"
+
         assignment_name="$(basename "$canvas_submit_to")"
         commit_hash="$(git rev-parse --short HEAD)"
 
         filename="$(pwd)/$assignment_name-$commit_hash.pdf"
         html_filename="$(mktemp --suffix=".html")"
 
+        echo "Rendering Markdown to HTML"
         render_html "$base_md" > "$html_filename"
+
+        echo "Rendering HTML to PDF"
         chrome --headless --disable-gpu --print-to-pdf="./$filename" "$html_filename"
 
+        echo "Uploading PDF to Canvas"
         submit_to_canvas "$canvas_submit_to" "$filename"
     fi
 }

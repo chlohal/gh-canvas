@@ -16,7 +16,7 @@ runs:
     - run: |
           gh_canvas_folder=$(mktemp -d)
           git clone https://github.com/chlohal/gh-canvas --depth=1 "$gh_canvas_folder/gh-canvas"
-          canvas_preview_url=$("$gh_canvas_folder/gh-canvas/render-and-upload.sh" "$(pwd)/README.md")
+          canvas_preview_url="$("$gh_canvas_folder/gh-canvas/render-and-upload.sh" "$(pwd)/README.md")"
           gh api \
             --method POST \
             -H "Accept: application/vnd.github+json" \
