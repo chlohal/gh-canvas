@@ -16,10 +16,10 @@ function main() {
         html_filename="$(mktemp --suffix=".html")"
 
         echo "Rendering Markdown to HTML"
-        render_html "README.md" > "$html_filename"
+        render_html "README.md" > "$html_filename" || exit 1
 
         echo "Rendering HTML to PDF"
-        chrome --headless --disable-gpu --print-to-pdf="./$filename" "$html_filename"
+        chrome --headless --disable-gpu --print-to-pdf="./$filename" "$html_filename" || exit 1
 
         echo "Uploading PDF to Canvas"
 
