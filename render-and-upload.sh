@@ -21,7 +21,7 @@ function main() {
         render_html "README.md" > "$html_filename" || exit 1
 
         echo "Rendering HTML to PDF"
-        chrome --headless --disable-gpu --print-to-pdf="$filename" "$html_filename" || exit 1
+        chrome --headless --disable-gpu --print-to-pdf="$filename" --no-pdf-header-footer "$html_filename" || exit 1
 
         echo "Uploading PDF to Canvas"
 
