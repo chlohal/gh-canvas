@@ -91,18 +91,7 @@ fn html_body_of_md(input: &String) -> String {
         input,
         &markdown::Options {
             parse: markdown::ParseOptions {
-                constructs: markdown::Constructs {
-                    math_flow: true,
-                    math_text: true,
-                    mdx_esm: true,
-                    mdx_expression_flow: true,
-                    mdx_expression_text: true,
-                    mdx_jsx_flow: true,
-                    mdx_jsx_text: true,
-                    html_text: false,
-                    html_flow: false,
-                    ..markdown::Constructs::gfm()
-                },
+                constructs: markdown::Constructs::gfm(),
                 gfm_strikethrough_single_tilde: false,
                 math_text_single_dollar: true,
                 mdx_expression_parse: None,
@@ -113,8 +102,8 @@ fn html_body_of_md(input: &String) -> String {
                 allow_dangerous_protocol: true,
                 default_line_ending: markdown::LineEnding::LineFeed,
                 gfm_footnote_label: None,
-                gfm_footnote_label_tag_name: None,
-                gfm_footnote_label_attributes: None,
+                gfm_footnote_label_tag_name: Some("hr".to_string()),
+                gfm_footnote_label_attributes: Some("".to_string()),
                 gfm_footnote_back_label: None,
                 gfm_footnote_clobber_prefix: None,
                 gfm_task_list_item_checkable: true,
