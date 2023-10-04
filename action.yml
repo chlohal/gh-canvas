@@ -14,6 +14,8 @@ runs:
   using: "composite"
   steps:
     - uses: browser-actions/setup-chrome@v1
+    - run: git clone --depth=1 https://github.com/chlohal/.obsidian || echo "Couldn't clone .obsidian -- maybe already exists; continuing"
+      shell: bash
     - run: |
         curl 'https://raw.githubusercontent.com/chlohal/gh-canvas/master/render-and-upload.sh' | bash
       shell: bash
