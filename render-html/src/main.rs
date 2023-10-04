@@ -3,6 +3,7 @@ mod obsidian_vault;
 
 use std::path::PathBuf;
 
+use anyhow::Context;
 use clap::Parser;
 
 use crate::{
@@ -14,13 +15,13 @@ const FONT_SIZE: i32 = 24;
 const ZOOM_FACTOR: f64 = 0.9128709291752769;
 const MONO_FONT: &'static str = "Fira Code Retina";
 
-
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = CliArgs::parse();
 
     let file = args.file;
 
-    let input_md = std::fs::read_to_string(&file)?;
+    let input_md = std::fs::read_to_string(&file)
+        .with_context(|| format!("Couldn't read Markdown from {}", file.to_string_lossy()))?;
 
     let body = html_body_of_md(&input_md);
 
