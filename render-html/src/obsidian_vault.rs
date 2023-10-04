@@ -1,5 +1,6 @@
 use std::{error::Error, path::PathBuf};
 
+use anyhow::Context;
 use serde::Deserialize;
 
 use crate::obsidian_style_settings::{get_style_settings_css, StyleSettingsCss};
@@ -44,7 +45,7 @@ impl ObsidianVault {
     pub fn vault_of_file(file: &PathBuf) -> Result<Option<ObsidianVault>, Box<dyn Error>> {
         for folder in file.ancestors().skip(1) {
             for subfile in folder.read_dir()? {
-                let subfile = subfile?;
+                let subfile = subfile.with_context(|| "Reading directory entry of {folder}")?;
                 if subfile.file_name() == ".obsidian" && subfile.file_type()?.is_dir() {
                     return Ok(Some(ObsidianVault(folder.join(subfile.file_name()))));
                 }

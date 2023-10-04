@@ -18,7 +18,7 @@ const MONO_FONT: &'static str = "Fira Code Retina";
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = CliArgs::parse();
 
-    let file = args.file;
+    let file = std::fs::canonicalize(args.file)?;
 
     let input_md = std::fs::read_to_string(&file)
         .with_context(|| format!("Couldn't read Markdown from {}", file.to_string_lossy()))?;
