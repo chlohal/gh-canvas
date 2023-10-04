@@ -12,7 +12,9 @@ function main() {
         assignment_name="$(basename "$canvas_submit_to")"
         commit_hash="$(git rev-parse --short HEAD)"
 
-        filename="$(pwd)/$assignment_name-$commit_hash.pdf"
+        assignment_name_mangled="$(slugify "$assignment_name")"
+
+        filename="$(pwd)/$assignment_name_mangled-$commit_hash.pdf"
         html_filename="$(mktemp --suffix=".html")"
 
         echo "Rendering Markdown to HTML"
@@ -34,6 +36,10 @@ function main() {
     else 
         echo "No canvas info found"
     fi
+}
+
+slugify () {
+    echo "$1" | iconv -c -t ascii//TRANSLIT | sed -E 's/[~^]+//g' | sed -E 's/[^a-zA-Z0-9]+/-/g' | sed -E 's/^-+|-+$//g' | tr A-Z a-z
 }
 
 function get_canvas_info() {
