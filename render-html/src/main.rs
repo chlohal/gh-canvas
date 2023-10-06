@@ -48,7 +48,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         r#"<!DOCTYPE html>
     <html>
     <head>
-        <meta charset="UTF-8">
+        <meta charset="UTF-8"/>
         <style>
             {app_css}
         </style>
