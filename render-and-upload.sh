@@ -57,7 +57,7 @@ function get_canvas_info() {
 HTML_RENDERER_FILENAME="$(mktemp)"
 
 function download_html_renderer() {
-    curl -o "$HTML_RENDERER_FILENAME" -L "https://github.com/chlohal/gh-canvas/releases/download/v0.04/render-html"
+    curl -o "$HTML_RENDERER_FILENAME" -L "https://github.com/chlohal/gh-canvas/releases/download/v0.05/render-html"
     chmod +x "$HTML_RENDERER_FILENAME"
 }
 
