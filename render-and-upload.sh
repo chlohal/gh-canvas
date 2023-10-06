@@ -14,18 +14,26 @@ function main() {
 
         assignment_name_mangled="$(slugify "$assignment_name")"
 
-        filename="$(pwd)/$assignment_name_mangled-$commit_hash.pdf"
-        html_filename="$(mktemp --suffix=".html")"
+        local_tmpdir="$(pwd)/$(mktemp -p "." -d)"
+
+        pdf_filename="$local_tmpdir/$assignment_name_mangled-$commit_hash.pdf"
+        html_filename="$local_tmpdir/document.html"
 
         echo "Rendering Markdown to HTML"
         render_html "README.md" > "$html_filename" || exit 1
 
         echo "Rendering HTML to PDF"
-        chrome --headless --disable-gpu --print-to-pdf="$filename" --no-pdf-header-footer --no-margins "$html_filename" || exit 1
+        chrome_path="$(which chrome || which google-chrome-stable)"
+        "$chrome_path" --headless --user-agent='Mozilla/5.0 (Windows NT 6.1) AppleWebKit/534.54.16 (KHTML, like Gecko) Version/5.1.4 Safari/534.54.16' \
+            --disable-gpu --run-all-compositor-stages-before-draw --virtual-time-budget=10000 \
+            --print-to-pdf="$pdf_filename" --no-pdf-header-footer --no-margins "$html_filename" || exit 1
+
+        if [ "$CANVAS_BASE_URL" = "" ]; then echo 'CANVAS_BASE_URL not set -- bailing'; exit 1; fi
+        if [ "$CANVAS_TOKEN" = "" ]; then echo 'CANVAS_TOKEN not set -- bailing'; exit 1; fi
 
         echo "Uploading PDF to Canvas"
 
-        canvas_preview_url="$(submit_to_canvas "$canvas_submit_to" "$filename")"
+        canvas_preview_url="$(submit_to_canvas "$canvas_submit_to" "$pdf_filename")"
 
         gh api \
             --method POST \
@@ -64,7 +72,7 @@ function render_html() {
 
 
 function curl_canvas_api() {
-    curl -L -H "Authorization: Bearer $CANVAS_TOKEN" "$CANVAS_BASE_URL/$1" "${@:2}"
+    curl -L -H "Authorization: Bearer $CANVAS_TOKEN" "$CANVAS_BASE_URL/$1" "${@:2}" || exit 1
 }
 
 function upload_canvas_file() {

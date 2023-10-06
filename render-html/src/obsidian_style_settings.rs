@@ -27,7 +27,7 @@ pub fn get_style_settings_css(
 
     let mut body_classes = Vec::new();
 
-    body_classes.push("theme-light".to_string());
+    body_classes.push(theme_variant.classname().to_string());
 
     for comment in css_settings_comments(&theme_css)
         .filter(|x| x.starts_with(START_SIGIL) && x.ends_with(END_SIGIL))

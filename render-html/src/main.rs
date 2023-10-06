@@ -11,8 +11,8 @@ use crate::{
     obsidian_vault::{ObsidianTheme::Light, ObsidianVault},
 };
 
-const FONT_SIZE: i32 = 24;
-const ZOOM_FACTOR: f64 = 0.9128709291752769;
+const FONT_SIZE: i32 = 18;
+const ZOOM_FACTOR: f64 = 1.;//0.9128709291752769;
 const MONO_FONT: &'static str = "Fira Code Retina";
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -58,13 +58,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 overflow: unset;
             }}
             body {{
-                overflow: unset; 
+                overflow: unset;
+                --file-margins: 0;
+                --background-primary: #fff !important;
             }}
+        </style>
+
+        <style>
+            @page {{
+                margin: 0.65in;
+                padding: 0;
+                size: 8.5in 11in;
+            }}   
         </style>
 
         <link rel='preconnect' href='https://fonts.googleapis.com'>
         <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
-        <link href='https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap' rel='stylesheet'>
+        <link href='https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=block' rel='stylesheet'>
     </head>
     <body class='{body_classes}' style="--font-text-size: {FONT_SIZE}px; --zoom-factor: {ZOOM_FACTOR}; --font-monospace-override: &quot;{MONO_FONT}&quot;;">
         <div class="print">
@@ -102,7 +112,7 @@ fn html_body_of_md(input: &String) -> String {
                 allow_dangerous_html: true,
                 allow_dangerous_protocol: true,
                 default_line_ending: markdown::LineEnding::LineFeed,
-                gfm_footnote_label: None,
+                gfm_footnote_label: Some("".to_string()),
                 gfm_footnote_label_tag_name: Some("hr".to_string()),
                 gfm_footnote_label_attributes: Some("".to_string()),
                 gfm_footnote_back_label: None,

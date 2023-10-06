@@ -7,12 +7,11 @@ use crate::obsidian_style_settings::{get_style_settings_css, StyleSettingsCss};
 
 pub struct ObsidianVault(pub PathBuf);
 
-const DEFAULT_BODY_CLASSES: [&str; 16] = [
+const DEFAULT_BODY_CLASSES: [&str; 15] = [
     "mod-linux",
     "is-frameless",
     "is-hidden-frameless",
     "obsidian-app",
-    "theme-light",
     "show-view-header",
     "highlightr-realistic",
     "css-settings-manager",
