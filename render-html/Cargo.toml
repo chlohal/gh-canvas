@@ -1,5 +1,5 @@
 [package]
-name = "gh-canvas"
+name = "render-html"
 version = "0.1.0"
 edition = "2021"
 
