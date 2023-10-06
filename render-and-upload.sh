@@ -62,6 +62,12 @@ function download_html_renderer() {
 }
 
 function render_html() {
+    if [ "$CI" != "true" ]
+    then
+        cargo run --manifest-path "$(dirname "$(which "$0")")/Cargo.toml" -- "$@"
+        return
+    fi
+
     if [ ! -f "./render-html-precompiled" ] 
     then 
         download_html_renderer; 
@@ -123,6 +129,7 @@ function submit_to_canvas() {
 
     curl_canvas_api "/api/v1/courses/$course_id/assignments/$assignment_id/submissions"  \
     -F "submission[submission_type]=online_upload" \
+    -F "comment[text_comment]=Automatically submitted with gh-canvas" \
     -F "submission[file_ids][]=$canvas_file_id" |
         jq -r '.preview_url'
 
