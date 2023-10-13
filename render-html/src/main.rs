@@ -1,3 +1,4 @@
+mod ast_to_html;
 mod obsidian_style_settings;
 mod obsidian_vault;
 
@@ -12,7 +13,7 @@ use crate::{
 };
 
 const DEFAULT_FONT_SIZE: i32 = 18;
-const DEFAULT_ZOOM_FACTOR: f64 = 1.;//0.9128709291752769;
+const DEFAULT_ZOOM_FACTOR: f64 = 1.; //0.9128709291752769;
 const DEFAULT_MONO_FONT: &'static str = "Fira Code Retina";
 const DEFAULT_H1_WEIGHT: u32 = 800;
 const DEFAULT_H2_WEIGHT: u32 = 800;
@@ -37,6 +38,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         ObsidianVault::vault_of_file(&file)?.ok_or("Couldn't find Obsidian vault folder")?;
 
     let app_css = include_str!("./asset/app.css");
+    let properties_css = include_str!("./asset/properties.css");
+
+    let prism_js = include_str!("./asset/prism.js");
 
     let StyleSettingsCss {
         theme_css,
@@ -60,6 +64,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         </style>
 
         <style>
+            {properties_css}
+        </style>
+
+        <style>
             :root {{
                 overflow: unset;
             }}
@@ -79,10 +87,39 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         <style>
             @page {{
-                margin: 0.65in;
+                margin: 0;
+                margin-bottom: 0.65in;
+                margin-top: 0.65in;
                 padding: 0;
                 size: 8.5in 11in;
-            }}   
+            }}
+            @page:first {{
+                margin-top: 0
+            }}
+            .non-meta-content {{
+                margin: 0;
+                margin-left: 0.65in;
+                margin-right: 0.65in;
+                margin-top: 0.65in;
+            }}
+            .properties ~ .non-meta-content {{
+                margin-top: var(--spacing-p);
+            }}
+        </style>
+
+        <!-- KaTeX (for math)! -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+
+        <!-- Prism (for syntax highlighting)! -->
+        <script>{prism_js}</script>
+
+        <!-- Lucide (for icons)! -->
+        <style>
+        @font-face {{
+            font-family: 'LucideIcons';
+            src: url(https://unpkg.com/lucide-static@latest/font/Lucide.ttf) format('truetype');
+        }}
         </style>
 
         <link rel='preconnect' href='https://fonts.googleapis.com'>
@@ -121,29 +158,20 @@ struct CliArgs {
 }
 
 fn html_body_of_md(input: &String) -> String {
-    markdown::to_html_with_options(
+    let ast = markdown::to_mdast(
         input,
-        &markdown::Options {
-            parse: markdown::ParseOptions {
-                constructs: markdown::Constructs::gfm(),
-                gfm_strikethrough_single_tilde: false,
-                math_text_single_dollar: true,
-                mdx_expression_parse: None,
-                mdx_esm_parse: None,
+        &markdown::ParseOptions {
+            constructs: markdown::Constructs {
+                frontmatter: true,
+                ..markdown::Constructs::gfm()
             },
-            compile: markdown::CompileOptions {
-                allow_dangerous_html: true,
-                allow_dangerous_protocol: true,
-                default_line_ending: markdown::LineEnding::LineFeed,
-                gfm_footnote_label: Some("".to_string()),
-                gfm_footnote_label_tag_name: Some("hr".to_string()),
-                gfm_footnote_label_attributes: Some("".to_string()),
-                gfm_footnote_back_label: None,
-                gfm_footnote_clobber_prefix: None,
-                gfm_task_list_item_checkable: true,
-                gfm_tagfilter: true,
-            },
+            gfm_strikethrough_single_tilde: false,
+            math_text_single_dollar: true,
+            mdx_expression_parse: None,
+            mdx_esm_parse: None,
         },
     )
-    .unwrap()
+    .unwrap();
+
+    return ast_to_html::ast_to_html(ast);
 }

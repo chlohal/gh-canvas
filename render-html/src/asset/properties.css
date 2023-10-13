@@ -1,0 +1,21 @@
+.properties {
+    background: var(--bg2);
+    padding: 1em;
+}
+
+.properties dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 1em;
+    row-gap: 0.25em;
+    margin: 0;
+}
+
+.properties dt {
+    font-weight: 600;
+}
+
+.properties dd {
+    padding: 0;
+    margin: 0;
+}
