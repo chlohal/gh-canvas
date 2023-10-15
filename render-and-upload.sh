@@ -123,9 +123,15 @@ function submit_to_canvas() {
 
     course_id="$(get_course_id_for_name "$course_code")"
 
+    sleep 2
+
     assignment_id="$(get_assignment_for_name "$course_id" "$assignment_name")"
 
+    sleep 2
+
     canvas_file_id="$(upload_canvas_file "$submission_file" "$course_id" "$assignment_id")"
+
+    sleep 2
 
     curl_canvas_api "/api/v1/courses/$course_id/assignments/$assignment_id/submissions"  \
     -F "submission[submission_type]=online_upload" \
